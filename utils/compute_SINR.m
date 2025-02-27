@@ -1,4 +1,4 @@
-function SINR = compute_SINR(H_comm, F_comm, F_sensing, sigmasq_ue)
+function SINR = compute_SINR(H_comm, F_comm, F_sensing, sigmasq_ue, phiADC)
     [U, M_t, N_t] = size(H_comm);
     comm_signal_pow = abs(sum(sum(conj(H_comm).*F_comm, 3), 2)).^2;
     H_comm_exp = reshape(H_comm, [U, 1, M_t, N_t]);

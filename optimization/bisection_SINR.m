@@ -19,5 +19,5 @@ function [F_star_all, feasible_SINR] = bisection_SINR(low, high, tol, fun)
             % fprintf('\n+Setting max to %.4f', high);
         end
     end
-    %fprintf('\nBisection completed. %d\n', mid);
+    % fprintf('\nBisection completed.\n')
 end

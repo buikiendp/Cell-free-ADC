@@ -8,15 +8,13 @@ addpath(genpath('./')); % Add paths of subfolders
 clear all;
 eval('sim_params'); % load the parameters
 output_file = 'power_data';
-disp('Simulation for Fig. 3');
 simulation(params, output_file);
 plot_results_power;
 
-%%Simulation for Fig. 4
+%% Simulation for Fig. 4
 % clear all;
 % eval('sim_params'); % load the parameters
 % params.P_comm_ratio = [0.5]; % Fixed power ratio for communications
-% disp('Simulation for Fig. 4');
 % 
 % % Generate samples with a pre-determined range of
 % % minimum distance between the target and closest UE
@@ -28,4 +26,3 @@ plot_results_power;
 %     simulation(params, output_file);
 % end
 % plot_results_dist;
-%

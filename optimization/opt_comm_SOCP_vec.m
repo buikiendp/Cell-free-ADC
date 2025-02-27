@@ -1,5 +1,4 @@
-function [F_star, feasible] = opt_comm_SOCP_vec(H_comm, sigmasq_comm, P_comm, F_sensing, gamma)
-    % 5 users, 2 APs, 16 antennas
+function [F_star, feasible] = opt_comm_SOCP_vec(H_comm, sigmasq_comm, phiADC, P_comm, F_sensing, gamma)
 
     [U, M, N] = size(H_comm);
     H_st = reshape(H_comm, U, []); % U x M_t N_t - h_u has different order than paper
@@ -23,7 +22,7 @@ function [F_star, feasible] = opt_comm_SOCP_vec(H_comm, sigmasq_comm, P_comm, F_
 
     subject to
 
-        % SINR constraints, euclid norm (sqrt(x^2 + ...)
+        % SINR constraints
         for u = 1:U
             norm([H_st(u, :) * F', H_st(u, :) *F_sensing_st',  sqrt(sigmasq_comm)]) ...
                                             <= sqrt(1 + 1/gamma)*real(H_st(u, :)*F(u, :)');
@@ -43,13 +42,5 @@ function [F_star, feasible] = opt_comm_SOCP_vec(H_comm, sigmasq_comm, P_comm, F_
         F_star = zeros(U, M, N);
     end
 
-    fprintf ("%d %d %d %d %d\n", U, M, N, gamma, sigmasq_comm);
-     for u = 1:1
-         norm([H_st(u, :) * F', H_st(u, :) *F_sensing_st',  sqrt(sigmasq_comm)])
-    %     H_st(u, :) * F'
-    %     sqrt(1 + 1/gamma)*real(H_st(u, :)*F(u, :)')
-     end
-
-    %F_star
 end
 

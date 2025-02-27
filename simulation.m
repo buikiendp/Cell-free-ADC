@@ -4,8 +4,7 @@ function results = simulation(params, output_filename)
     save_filename = output_filename;
     results = {};
     
-    % Parfor Supported loop
-    %parfor rep=1:params.repetitions
+    % Parfor Supported loop parfor
     for rep=1:params.repetitions
         fprintf('\n Repetition %i:', rep)
         [UE_pos, AP_pos, target_pos] = generate_positions(params.T, ...
@@ -50,22 +49,22 @@ function results = simulation(params, output_filename)
             
             %% NS Sensing - RZF Comm
             F_star_RZF = beam_regularized_zeroforcing(H_comm, P_comm, params.sigmasq_ue)*sqrt(P_comm);
-            results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_star_RZF, params.sigmasq_ue, sensing_beamsteering, F_sensing_NS, params.sigmasq_radar_rcs);
+            results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_star_RZF, params.sigmasq_ue, params.phiADC, sensing_beamsteering, F_sensing_NS, params.sigmasq_radar_rcs);
             results{rep}.power{p_i}{solution_counter}.name = 'NS+RZF';
             solution_counter = solution_counter + 1;
     
             %% NS Sensing - Opt Comm
-            wrapped_objective = @(gamma) opt_comm_SOCP_vec(H_comm, params.sigmasq_ue, P_comm, F_sensing_NS, gamma);
+            wrapped_objective = @(gamma) opt_comm_SOCP_vec(H_comm, params.sigmasq_ue, params.phiADC, P_comm, F_sensing_NS, gamma);
             [F_star_SOCP_NS, SINR_min_SOCP_NS] = bisection_SINR(params.bisect.low, params.bisect.high, params.bisect.tol, wrapped_objective);
-            results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_star_SOCP_NS, params.sigmasq_ue, sensing_beamsteering, F_sensing_NS, params.sigmasq_radar_rcs);
+            results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_star_SOCP_NS, params.sigmasq_ue, params.phiADC, sensing_beamsteering, F_sensing_NS, params.sigmasq_radar_rcs);
             results{rep}.power{p_i}{solution_counter}.name = 'NS+OPT';
             results{rep}.power{p_i}{solution_counter}.min_SINR_opt = SINR_min_SOCP_NS;
             solution_counter = solution_counter + 1;
             
             %% CB Sensing - OPT Comm
-            wrapped_objective = @(gamma) opt_comm_SOCP_vec(H_comm, params.sigmasq_ue, P_comm, F_sensing_CB, gamma);
+            wrapped_objective = @(gamma) opt_comm_SOCP_vec(H_comm, params.sigmasq_ue, params.phiADC, P_comm, F_sensing_CB, gamma);
             [F_star_SOCP_CB, SINR_min_SOCP_CB] = bisection_SINR(params.bisect.low, params.bisect.high, params.bisect.tol, wrapped_objective);
-            results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_star_SOCP_CB, params.sigmasq_ue, sensing_beamsteering, F_sensing_CB, params.sigmasq_radar_rcs);
+            results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_star_SOCP_CB, params.sigmasq_ue, params.phiADC, sensing_beamsteering, F_sensing_CB, params.sigmasq_radar_rcs);
             results{rep}.power{p_i}{solution_counter}.name = 'CB+OPT';
             results{rep}.power{p_i}{solution_counter}.min_SINR_opt = SINR_min_SOCP_CB;
             solution_counter = solution_counter + 1;
@@ -75,16 +74,16 @@ function results = simulation(params, output_filename)
             [Q_jsc, feasible, F_jsc_SSNR] = opt_jsc_SDP(H_comm, params.sigmasq_ue, SINR_min_SOCP_NS, sensing_beamsteering, sens_streams, params.sigmasq_radar_rcs, params.P);
             [F_jsc_comm, F_jsc_sensing] = SDP_beam_extraction(Q_jsc, H_comm);
 
-            results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_jsc_comm, params.sigmasq_ue, sensing_beamsteering, F_jsc_sensing, params.sigmasq_radar_rcs);
+            results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_jsc_comm, params.sigmasq_ue, params.phiADC, sensing_beamsteering, F_jsc_sensing, params.sigmasq_radar_rcs);
             results{rep}.power{p_i}{solution_counter}.feasible = feasible;
             results{rep}.power{p_i}{solution_counter}.name = strcat('JSC+Q',num2str(sens_streams));
             results{rep}.power{p_i}{solution_counter}.SSNR_opt = F_jsc_SSNR;
             solution_counter = solution_counter + 1;
         end
-    %end
+    end
     
     %% Save Results
-    output_folder = './output/';
+    output_folder = './output2/';
     if ~exist(output_folder)
         mkdir(output_folder);
     end
