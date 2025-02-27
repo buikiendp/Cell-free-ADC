@@ -5,8 +5,7 @@ params.U = 5; % Number of users
 params.T = 1; % Number of targets
 
 params.P = 1; % Power per AP (W)
-params.P_comm_ratio = [0.1, 0.25];
-%params.P_comm_ratio = [0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]; % Power ratio for communications % [0.5];
+params.P_comm_ratio = [0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]; % Power ratio for communications % [0.5];
 
 % Bisection Limits (if needed)
 params.bisect.low = 0.01;
@@ -14,11 +13,12 @@ params.bisect.high = 60;
 params.bisect.tol = 1e-2;
 
 % Noise
+params.phiADC = 0.9936;
 params.sigmasq_ue = 1; % UE receiver noise
 params.sigmasq_radar_rcs = 0.1; % Radar RCS variable 
 params.sigmasq_radar_receiver = 1; % Radar receiver noise
 
-params.repetitions = 1;
+params.repetitions = 10;
 
 % Geometry setup
 params.geo.line_length = 100;
