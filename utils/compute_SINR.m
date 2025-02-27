@@ -5,9 +5,13 @@ function SINR = compute_SINR(H_comm, F_comm, F_sensing, sigmasq_ue, phiADC)
     F_star_exp = reshape(F_comm, [1, U, M_t, N_t]);
     sum_pow = sum(abs(sum(sum(conj(H_comm_exp).*F_star_exp, 4), 3)).^2, 2);
     sensing_interference = 0;
+    
+    %TODO
+    noiseADC = sigmasq_ue + (sigmasq_ue+comm_signal_pow).*(1-phiADC)./phiADC;
+
     for s = 1:size(F_sensing, 1)
         sensing_interference = sensing_interference + abs(sum(sum(conj(H_comm).*F_sensing(s, :, :), 3), 2)).^2;
     end
-    SINR= comm_signal_pow./(sum_pow - comm_signal_pow + sensing_interference + sigmasq_ue);
+    SINR= comm_signal_pow./(sum_pow - comm_signal_pow + sensing_interference + noiseADC);
 
 end

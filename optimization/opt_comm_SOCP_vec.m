@@ -24,8 +24,11 @@ function [F_star, feasible] = opt_comm_SOCP_vec(H_comm, sigmasq_comm, phiADC, P_
 
         % SINR constraints
         for u = 1:U
-            norm([H_st(u, :) * F', H_st(u, :) *F_sensing_st',  sqrt(sigmasq_comm)]) ...
-                                            <= sqrt(1 + 1/gamma)*real(H_st(u, :)*F(u, :)');
+            norm([H_st(u, :) * F', H_st(u, :) *F_sensing_st',  sqrt(sigmasq_comm^2 + (1-phiADC)/phiADC)*sigmasq_comm^2]) ...
+                                            <= sqrt(1 + 1/gamma - (1-phiADC)/phiADC)*real(H_st(u, :)*F(u, :)');
+			
+            %norm([H_st(u, :) * F', H_st(u, :) *F_sensing_st',  sqrt(sigmasq_comm)]) ...
+            %                                <= sqrt(1 + 1/gamma)*real(H_st(u, :)*F(u, :)');
         end
 
         % Power constraints
