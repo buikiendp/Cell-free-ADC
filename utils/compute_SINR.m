@@ -7,7 +7,7 @@ function SINR = compute_SINR(H_comm, F_comm, F_sensing, sigmasq_ue, phiADC)
     sensing_interference = 0;
     
     %TODO
-    noiseADC = (sigmasq_ue+comm_signal_pow).*(1-phiADC)./phiADC;
+    noiseADC = sigmasq_ue + (sigmasq_ue+comm_signal_pow).*(1-phiADC)./phiADC;
 
     for s = 1:size(F_sensing, 1)
         sensing_interference = sensing_interference + abs(sum(sum(conj(H_comm).*F_sensing(s, :, :), 3), 2)).^2;
