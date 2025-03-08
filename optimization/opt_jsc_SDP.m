@@ -1,4 +1,4 @@
-function [F_star, feasible, SSNR_opt] = opt_jsc_SDP(H_comm, sigmasq_comm, gamma, sensing_beamsteering, sensing_streams, sigmasq_sens, P_all)
+function [F_star, feasible, SSNR_opt] = opt_jsc_SDP(H_comm, sigmasq_comm, phiADC, gamma, sensing_beamsteering, sensing_streams, sigmasq_sens, P_all)
 
     [U, M, N] = size(H_comm);
     H_st = reshape(H_comm, U, []);
@@ -38,7 +38,8 @@ function [F_star, feasible, SSNR_opt] = opt_jsc_SDP(H_comm, sigmasq_comm, gamma,
             end
             % The following expression is hermitian but not recognized by CVX
             % Thus, we need the following real - imag
-            real((1/gamma) * trace(Q_u*squeeze(F(:, :, u))) - L_u) >=  sigmasq_comm; 
+            %real((1/gamma) * trace(Q_u*squeeze(F(:, :, u))) - L_u) >=  sigmasq_comm; 
+            real((1/gamma - (1-phiADC)/phiADC) * trace(Q_u*squeeze(F(:, :, u))) - L_u) >=  sigmasq_comm * (1 + (1-phiADC)/phiADC); 
             imag((1/gamma) * trace(Q_u*squeeze(F(:, :, u))) - L_u) == 0;
         
         end

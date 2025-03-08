@@ -71,7 +71,7 @@ function results = simulation(params, output_filename)
 
             %% JSC
             sens_streams = 1;
-            [Q_jsc, feasible, F_jsc_SSNR] = opt_jsc_SDP(H_comm, params.sigmasq_ue, SINR_min_SOCP_NS, sensing_beamsteering, sens_streams, params.sigmasq_radar_rcs, params.P);
+            [Q_jsc, feasible, F_jsc_SSNR] = opt_jsc_SDP(H_comm, params.sigmasq_ue, params.phiADC, SINR_min_SOCP_NS, sensing_beamsteering, sens_streams, params.sigmasq_radar_rcs, params.P);
             [F_jsc_comm, F_jsc_sensing] = SDP_beam_extraction(Q_jsc, H_comm);
 
             results{rep}.power{p_i}{solution_counter} = compute_metrics(H_comm, F_jsc_comm, params.sigmasq_ue, params.phiADC, sensing_beamsteering, F_jsc_sensing, params.sigmasq_radar_rcs);
@@ -83,7 +83,7 @@ function results = simulation(params, output_filename)
     end
     
     %% Save Results
-    output_folder = './output2/';
+    output_folder = './output5ADC/';
     if ~exist(output_folder)
         mkdir(output_folder);
     end

@@ -7,5 +7,6 @@ function sensing_SNR = compute_sensing_SNR(sigmasq_radar_rcs, sensing_beamsteeri
     sensing_tx_gain = sum(per_beam_per_ap_gain, 'all'); % Sum over streams and M_t
     sensing_SNR = sensing_tx_gain*sigmasq_radar_rcs; % Scale with sensing gain
     %fprintf("%d", sumSigmaQ_ADC/phiADC^2);
-    sensing_SNR = sensing_SNR / (1 + sumSigmaQ_ADC/phiADC^2);
+    sumSigmaQ2 = phiADC*(1-phiADC)*sensing_SNR;
+    sensing_SNR = sensing_SNR / (1 + sumSigmaQ2/(phiADC^2));
 end
